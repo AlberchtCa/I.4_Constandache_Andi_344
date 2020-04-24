@@ -1,0 +1,11 @@
+q0 q1 q2 q3
+q0
+q3
+a b c
+b c o
+s0 s1 s2
+s0
+q0 a s0 q1 s0s1 p
+q0 a s0 q2 s0s1 o
+q2 b s1 q3 s1s2 o
+q1 b s1 q3 s1s2 p
