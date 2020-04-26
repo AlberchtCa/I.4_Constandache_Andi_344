@@ -1,0 +1,17 @@
+q1 q2 q3 qf
+q1
+q1 qf
+0 1
+a b e
+A Z
+Z
+q1 lambda Z q2 ZZ lambda
+q2 0 Z q2 ZA a
+q2 0 A q2 AA a
+q2 1 A q3 lambda b
+q3 1 A q3 lambda b
+q3 lambda Z qf lambda b
+q3 lambda Z qf lambda b
+q2 1 A qf lambda a
+qf 1 A qf lambda b
+qf lambda Z qf lambda b
