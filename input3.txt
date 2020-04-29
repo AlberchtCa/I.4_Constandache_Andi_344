@@ -1,0 +1,12 @@
+q0 q1 q2
+q0
+q2
+0 1
+a b c d
+0 z
+z
+q0 0 z q0 z0 ab
+q0 0 0 q0 00 ab
+q0 1 0 q1 lambda cd
+q1 1 0 q1 lambda cd
+q1 lambda z q2 z lambda
