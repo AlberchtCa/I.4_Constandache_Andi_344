@@ -21,7 +21,7 @@ class Automat:
 def main():
     automat = Automat()
 
-    with open('input3.txt') as f:
+    with open('input4.txt') as f:
         # Preiau starile
         automat.stari = f.readline().split()
 
@@ -61,65 +61,28 @@ def main():
         if sir_intrare == "#":
             g = 1
         else:
-            get_outputs(automat, sir_intrare, automat.starea_initiala, [automat.simbol_initial], [])
+            get_outputs(automat, sir_intrare, automat.starea_initiala, [automat.simbol_initial], [],
+                        [(str(automat.starea_initiala), 'start')])
 
 
-def get_outputs(automat, sir_intrare, stare_curenta, stiva, output):
+def get_outputs(automat, sir_intrare, stare_curenta, stiva, output, path):
     # Daca prezinta conditiile de acceptare ale unui APD, afisez output.
     if len(sir_intrare) == 0:
         if stare_curenta in automat.stari_finale or len(stiva) == 0:
             print(''.join(output))
+            print(path)
         else:
-            cauta_lambda(automat, sir_intrare, stare_curenta, stiva, output)
+            cauta_lambda(automat, sir_intrare, stare_curenta, stiva, output, path)
     else:
-        # Daca am ajuns sa golesc stiva nu e prea bine
-        if len(stiva) == 0:
-            print("whoops")
 
-        # Altfel, caut o urmatoare stare pe care sa o parcurg.
-        else:
-            # Iau toate tranzitiile la rand
-            for index_tranzitii in range(len(automat.tranzitii)):
-                # Daca tranzitia e din starea in care sunt in alta stare e posibila o tranzitie
-                if automat.stari.index(automat.tranzitii[index_tranzitii][0]) == stare_curenta:
-                    # Daca litera citita de tranzitie e cea dorita sau e lambda
-                    # Si daca ce citesc pe stiva e ce doresc sau e lambda
-                    if (automat.tranzitii[index_tranzitii][1] == sir_intrare[0]
-                        or automat.tranzitii[index_tranzitii][1] == 'lambda') \
-                            and \
-                            (automat.tranzitii[index_tranzitii][2] == stiva[-1]
-                            or automat.tranzitii[index_tranzitii][2] == 'lambda'):
-                        # Modific stiva
-                        stiva_new = modifica_stiva(stiva, automat.tranzitii[index_tranzitii][4],
-                                                       automat.alfabet_stiva)
-                        if automat.tranzitii[index_tranzitii][5] != 'lambda':
-                        # Daca output e lambda, nu adaug nimic la output
-                            output_new = output + [automat.tranzitii[index_tranzitii][5]]
-                        else:
-                            # Altfel bag output
-                            output_new = output
-                        # Repet
-                        if automat.tranzitii[index_tranzitii][1] == 'labmda':
-                            get_outputs(automat,
-                                        sir_intrare,
-                                        automat.stari.index(automat.tranzitii[index_tranzitii][3]),
-                                        stiva_new,
-                                        output_new)
-                        else:
-                            get_outputs(automat,
-                                        sir_intrare[1:],
-                                        automat.stari.index(automat.tranzitii[index_tranzitii][3]),
-                                        stiva_new,
-                                        output_new)
-
-def cauta_lambda(automat, sir_intrare, stare_curenta, stiva, output):
-    for i in range(len(automat.tranzitii)):
+        # Iau toate tranzitiile la rand
         for index_tranzitii in range(len(automat.tranzitii)):
             # Daca tranzitia e din starea in care sunt in alta stare e posibila o tranzitie
             if automat.stari.index(automat.tranzitii[index_tranzitii][0]) == stare_curenta:
                 # Daca litera citita de tranzitie e cea dorita sau e lambda
                 # Si daca ce citesc pe stiva e ce doresc sau e lambda
-                if (automat.tranzitii[index_tranzitii][1] == 'lambda') \
+                if (automat.tranzitii[index_tranzitii][1] == sir_intrare[0]
+                    or automat.tranzitii[index_tranzitii][1] == 'lambda') \
                         and \
                         (automat.tranzitii[index_tranzitii][2] == stiva[-1]
                          or automat.tranzitii[index_tranzitii][2] == 'lambda'):
@@ -132,12 +95,58 @@ def cauta_lambda(automat, sir_intrare, stare_curenta, stiva, output):
                     else:
                         # Altfel bag output
                         output_new = output
+
+                    path_new = path + [(automat.tranzitii[index_tranzitii][1],
+                                            automat.tranzitii[index_tranzitii][3])]
                     # Repet
+                    if automat.tranzitii[index_tranzitii][1] == 'lambda':
+
                         get_outputs(automat,
                                     sir_intrare,
                                     automat.stari.index(automat.tranzitii[index_tranzitii][3]),
                                     stiva_new,
-                                    output_new)
+                                    output_new,
+                                    path_new)
+                    else:
+                        get_outputs(automat,
+                                    sir_intrare[1:],
+                                    automat.stari.index(automat.tranzitii[index_tranzitii][3]),
+                                    stiva_new,
+                                    output_new,
+                                    path_new)
+
+
+def cauta_lambda(automat, sir_intrare, stare_curenta, stiva, output, path):
+    for index_tranzitii in range(len(automat.tranzitii)):
+        # Daca tranzitia e din starea in care sunt in alta stare e posibila o tranzitie
+        if automat.stari.index(automat.tranzitii[index_tranzitii][0]) == stare_curenta:
+            # Daca litera citita de tranzitie e cea dorita sau e lambda
+            # Si daca ce citesc pe stiva e ce doresc sau e lambda
+            if (automat.tranzitii[index_tranzitii][1] == 'lambda') \
+                    and \
+                    (automat.tranzitii[index_tranzitii][2] == stiva[-1]
+                     or automat.tranzitii[index_tranzitii][2] == 'lambda'):
+                # Modific stiva
+                stiva_new = modifica_stiva(stiva, automat.tranzitii[index_tranzitii][4],
+                                           automat.alfabet_stiva)
+
+                path_new = path + [(automat.tranzitii[index_tranzitii][1],
+                                    automat.tranzitii[index_tranzitii][3])]
+
+                if automat.tranzitii[index_tranzitii][5] != 'lambda':
+                    # Daca output e lambda, nu adaug nimic la output
+                    output_new = output + [automat.tranzitii[index_tranzitii][5]]
+                else:
+                    # Altfel bag output
+                    output_new = output
+                    # Repet
+                    get_outputs(automat,
+                                sir_intrare,
+                                automat.stari.index(automat.tranzitii[index_tranzitii][3]),
+                                stiva_new,
+                                output_new,
+                                path_new)
+
 
 def modifica_stiva(stiva, input, alfabet_stiva):
     if stiva[-1] == input:
@@ -159,7 +168,6 @@ def modifica_stiva(stiva, input, alfabet_stiva):
                         i = j
                 j += 1
             return stiva_noua
-
 
 
 main()

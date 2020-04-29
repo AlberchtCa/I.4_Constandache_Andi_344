@@ -1,0 +1,14 @@
+q0 q1 q2
+q0
+q2
+a b
+1
+A Z
+Z
+q0 a Z q0 ZA lambda
+q0 a Z q0 ZAA lambda
+q0 a A q0 AA lambda
+q0 a A q0 AAA lambda
+q0 b A q1 lambda 1
+q1 b A q1 lambda 1
+q1 lambda Z q2 lambda lambda
